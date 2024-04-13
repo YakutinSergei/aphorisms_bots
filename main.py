@@ -3,12 +3,14 @@ import logging
 
 from aiogram import Bot
 from aiogram.types import BotCommand
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from create_bot import bot, dp
 from environs import Env
 
 from data_base.orm import create_tables
-from handlers import admin_handlers
+from handlers import admin_handlers, start_handlers
+from handlers.apsh import mailing
 
 env = Env()
 env.read_env()
@@ -40,8 +42,13 @@ async def main():
     await create_tables() # Создание таблиц
 
     # Регистриуем роутеры в диспетчере
+    dp.include_router(start_handlers.router)
     dp.include_router(admin_handlers.router)
 
+    scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
+    scheduler.add_job(mailing, 'cron', hour=14, minute=00,
+                      args=())
+    scheduler.start()
    
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)

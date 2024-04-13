@@ -10,7 +10,7 @@ class UsersOrm(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[int] = mapped_column(BigInteger)
-    admin_check: Mapped[bool] = mapped_column(default=True)
+    admin_check: Mapped[bool] = mapped_column(default=False)
 
 
 '''Таблица афоризмов'''
@@ -18,3 +18,4 @@ class AphorismsORM(Base):
     __tablename__ = 'aphorisms'
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
+    autor: Mapped[str]
