@@ -49,8 +49,8 @@ async def main():
     dp.include_router(admin_handlers.router)
 
     scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    start_date = datetime.now().replace(hour=20, minute=0, second=0, microsecond=0) + timedelta(days=1)
-    scheduler.add_job(mailing, 'interval', hours=6, start_date=start_date)
+    start_date = datetime.now().replace(hour=2, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    scheduler.add_job(mailing, 'interval', minutes=6, start_date=start_date)
     scheduler.start()
    
     # Пропускаем накопившиеся апдейты и запускаем polling
