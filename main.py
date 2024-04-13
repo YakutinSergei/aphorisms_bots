@@ -1,8 +1,11 @@
 import asyncio
 import logging
+from datetime import datetime, timedelta
 
 from aiogram import Bot
 from aiogram.types import BotCommand
+from pytz import timezone
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from create_bot import bot, dp
@@ -46,8 +49,8 @@ async def main():
     dp.include_router(admin_handlers.router)
 
     scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    scheduler.add_job(mailing, 'cron', hour=14, minute=00,
-                      args=())
+    start_date = datetime.now().replace(hour=20, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    scheduler.add_job(mailing, 'interval', hours=6, start_date=start_date)
     scheduler.start()
    
     # Пропускаем накопившиеся апдейты и запускаем polling
